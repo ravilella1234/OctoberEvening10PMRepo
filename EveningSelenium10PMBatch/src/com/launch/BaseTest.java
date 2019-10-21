@@ -5,7 +5,11 @@ import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 
 public class BaseTest 
 {
@@ -26,15 +30,42 @@ public class BaseTest
 	{
 		if(p.getProperty(browser).equals("chrome"))
 		{
+			ChromeOptions option=new ChromeOptions();
+			option.addArguments("user-data-dir=C:\\Users\\DELL\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 10");
+			
+			option.addArguments("--disable-notifications");
+			option.addArguments("--disable-infobars");
+			option.addArguments("--start-maximized");
+			
+			//Proxy IP Configuration
+			//option.addArguments("--proxy-server=http://192.168.90.84:1234");
+			
 			//System.setProperty("webdriver.chrome.driver", "C:\\Users\\DELL\\Desktop\\drive\\chromedriver.exe");
 			System.setProperty("webdriver.chrome.driver",projectpath+"//drivers//chromedriver.exe" );
-			driver=new ChromeDriver();
+			driver=new ChromeDriver(option);
 		}
 		else if(p.getProperty(browser).equals("firefox")) 
 		{
+			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "e://abclogs.txt");
+			
+			ProfilesIni p=new ProfilesIni();
+			FirefoxProfile profile = p.getProfile("NightProfile");
+			
+			//notifications
+			profile.setPreference("dom.webnotifications.enabled", false);
+			
+			//proxy servers
+			/*profile.setPreference("network.proxy.type", 1);
+			profile.setPreference("network.proxy.socks", "192.168.90.54");
+			profile.setPreference("network.proxy.socks_port", 1744);*/
+			
+			
+			FirefoxOptions option=new FirefoxOptions();
+			option.setProfile(profile);
+			
 			//System.setProperty("webdriver.gecko.driver", "C:\\Users\\DELL\\Desktop\\drive\\geckodriver.exe");
 			System.setProperty("webdriver.gecko.driver", projectpath+"//drivers//geckodriver.exe" );
-			driver=new FirefoxDriver();
+			driver=new FirefoxDriver(option);
 		}
 	}
 	
