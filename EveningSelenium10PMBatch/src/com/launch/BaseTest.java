@@ -3,6 +3,7 @@ package com.launch;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,24 +14,34 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+
 public class BaseTest 
 {
 	
 	public static WebDriver driver;
-	public static String projectpath=System.getProperty("user.dir");
+	public static String projectPath=System.getProperty("user.dir");
 	public static Properties p;
 	public static Properties or;
+	
+	public static ExtentReports report = ExtentManager.getInstance();
+	public static ExtentTest test;
 	
 	
 	public static void init() throws Exception
 	{
-		FileInputStream fis=new FileInputStream(projectpath+"//data.properties");
+		FileInputStream fis=new FileInputStream(projectPath+"//data.properties");
 		p=new Properties();
 		p.load(fis);
 		
-		FileInputStream fis1=new FileInputStream(projectpath+"//or.properties");
+		FileInputStream fis1=new FileInputStream(projectPath+"//or.properties");
 		or=new Properties();
 		or.load(fis1);
+		
+		PropertyConfigurator.configure(projectPath+"//log4j.properties");
+		
+		
 	}
 	
 	public static void launch(String browser)
@@ -48,7 +59,7 @@ public class BaseTest
 			//option.addArguments("--proxy-server=http://192.168.90.84:1234");
 			
 			//System.setProperty("webdriver.chrome.driver", "C:\\Users\\DELL\\Desktop\\drive\\chromedriver.exe");
-			System.setProperty("webdriver.chrome.driver",projectpath+"//drivers//chromedriver.exe" );
+			System.setProperty("webdriver.chrome.driver",projectPath+"//drivers//chromedriver.exe" );
 			driver=new ChromeDriver(option);
 		}
 		else if(p.getProperty(browser).equals("firefox")) 
@@ -71,7 +82,7 @@ public class BaseTest
 			option.setProfile(profile);
 			
 			//System.setProperty("webdriver.gecko.driver", "C:\\Users\\DELL\\Desktop\\drive\\geckodriver.exe");
-			System.setProperty("webdriver.gecko.driver", projectpath+"//drivers//geckodriver.exe" );
+			System.setProperty("webdriver.gecko.driver", projectPath+"//drivers//geckodriver.exe" );
 			driver=new FirefoxDriver(option);
 		}
 	}
